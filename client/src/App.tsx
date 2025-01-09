@@ -6,7 +6,7 @@ import { Navbar } from './components/navbar';
 
 function App() {
   return (
-    <div>
+    <div className="min-h-screen bg-white">
       <Router>
         <Navbar />
           <Routes>

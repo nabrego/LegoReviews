@@ -3,6 +3,7 @@ import express, { Express} from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import ratingsRouter from "./routes/ratings";
+import setsRouter from "./routes/lego-sets";
 import cors from "cors";
 
 dotenv.config();
@@ -20,7 +21,8 @@ mongoose
     .then(() => console.log("CONNECTED TO MONGODB"))
     .catch((err) => console.log("FAILED TO CONNECT TO MONGODB", err));
 
-app.use("/ratings", ratingsRouter)
+app.use("/", ratingsRouter);
+app.use("/api", setsRouter);
 
 app.listen(port, () => {
     console.log(`SERVER IS RUNNING ON PORT ${port}`);
