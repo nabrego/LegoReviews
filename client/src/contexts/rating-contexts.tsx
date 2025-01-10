@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
+import axios from "axios";
 
 export interface Rating {
     _id?: string;
@@ -18,15 +19,15 @@ export const RatingsContext = createContext<RatingContextType | undefined>(undef
 
 export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
     const [ratings, setRatings] = useState<Rating[]>([]);
-
     const { user } = useUser();
 
     const fetchRatings = async() => {
         if (!user) return;
-        const response = await fetch(`http://localhost:3001/ratings/getAllByUserID/${user?.id}`);
-        if (response.ok) {
-            const ratings = await response.json();
-            setRatings(ratings);
+        try {
+            const response = await axios.get(`http://localhost:3001/ratings/getAllByUserID/${user?.id}`);
+            setRatings(response.data);
+        } catch (err) {
+            console.error("Error fetching ratings", err);
         }
     };
 
@@ -35,69 +36,47 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
     }, [user]);
 
     const addRating = async (rating: Rating) => {
-        const response = await fetch("http//localhost:3001/ratings", {
-            method: "POST", 
-            body: JSON.stringify(rating),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        try{
-            if (response.ok) {
-                const newRating = await response.json();
-                setRatings((prev) => [...prev, newRating]);
-            }
+        try {
+            const response = await axios.post("http://localhost:3001/ratings", rating, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            setRatings((prev) => [...prev, response.data]);
         } catch (err) {
             console.error("Error adding rating", err);
         }
-        
     };
 
     const updateRating = async (id: string, newRating: Rating) => {
-        const response = await fetch(`http//localhost:3001/ratings/${id}`, {
-            method: "PUT", 
-            body: JSON.stringify(newRating),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        try{
-            if (response.ok) {
-                const newRating = await response.json();
-                setRatings((prev) =>
-                    prev.map((rating) => {
-                        if (rating._id === id) {
-                            return newRating;
-                        } else {
-                            return rating;
-                        }
-                    })
-                );
-            }
+        try {
+            const response = await axios.put(`http://localhost:3001/ratings/${id}`, newRating, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            setRatings((prev) =>
+                prev.map((rating) => rating._id === id ? response.data : rating)
+            );
         } catch (err) {
-            console.error("Error adding rating", err);
+            console.error("Error updating rating", err);
         }
-        
     };
 
     const deleteRating = async (id: string) => {
-        const response = await fetch(`http//localhost:3001/ratings/${id}`, {
-            method: "DELETE", 
-        });
-        try{
-            if (response.ok) {
-                const deletedRating = await response.json();
-                setRatings((prev) => prev.filter((rating) => rating._id !== deletedRating._id));
-            }
+        try {
+            const response = await axios.delete(`http://localhost:3001/ratings/${id}`);
+            setRatings((prev) => prev.filter((rating) => rating._id !== response.data._id));
         } catch (err) {
-            console.error("Error adding rating", err);
+            console.error("Error deleting rating", err);
         }
     };
 
-    return <RatingsContext.Provider value={{ratings, addRating, updateRating, deleteRating}}>
-        {" "}
-        {children}
-    </RatingsContext.Provider>
+    return (
+        <RatingsContext.Provider value={{ratings, addRating, updateRating, deleteRating}}>
+            {children}
+        </RatingsContext.Provider>
+    );
 };
 
 export const useRatings = () => {
@@ -106,4 +85,4 @@ export const useRatings = () => {
         throw new Error("useRatings must be used within a RatingsProvider");
     }
     return context;
-}
+};

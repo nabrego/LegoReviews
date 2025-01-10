@@ -15,12 +15,12 @@ export const Navbar = () => {
                     </SignedIn>
                     <SignedOut>
                         <SignInButton mode="modal">
-                            <button className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">
+                            <button className="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700">
                                 Sign In
                             </button>
                         </SignInButton>
                         <SignUpButton mode="modal">
-                            <button className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">
+                            <button className="bg-red-600 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700">
                                 Sign Up
                             </button>
                         </SignUpButton>

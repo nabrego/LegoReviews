@@ -11,7 +11,6 @@ function App() {
         <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/auth" element={<h1>Auth</h1>} />
             <Route path="/rated-sets" element={<RatedSets />} />
           </Routes>
       </Router>

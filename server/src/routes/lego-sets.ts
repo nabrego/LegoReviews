@@ -9,10 +9,12 @@ const router = express.Router();
 const rebrickableAPIKey: string = process.env.REBRICKABLE_API_KEY || "";
 
 router.get("/sets", async (req: Request, res: Response) => {
-    try {        
-        const response = await axios.get('http://rebrickable.com/api/v3/lego/sets/?page_size=12',
+    try {
+        const page = parseInt(req.query.page as string) || 1;
+        const response = await axios.get('http://rebrickable.com/api/v3/lego/sets/',
         {
             params: {
+                page,
                 page_size: 12
             },
             headers: {
