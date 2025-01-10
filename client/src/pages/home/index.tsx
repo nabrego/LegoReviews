@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { SignedIn, SignedOut } from "@clerk/clerk-react";
+import { SignedOut } from "@clerk/clerk-react";
 import { LegoSet } from '../../types/lego-set';
-import { LegoSetCard } from '../../components/lego-set-card';
 import { RatingLegoSetCard } from '../../components/rating-lego-set-card';
 import { 
     Pagination,
@@ -60,12 +59,7 @@ export const Home = () => {
             <div className="grid grid-cols-4 gap-6">
                 {sets.map((set) => (
                     <div key={set.set_num}>
-                        <SignedIn>
-                            <RatingLegoSetCard set={set} />
-                        </SignedIn>
-                        <SignedOut>
-                            <LegoSetCard set={set} />
-                        </SignedOut>
+                        <RatingLegoSetCard set={set} />
                     </div>
                 ))}
             </div>

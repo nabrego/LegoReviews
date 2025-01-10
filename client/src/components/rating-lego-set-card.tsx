@@ -2,7 +2,7 @@ import { LegoSet } from "../types/lego-set";
 import Select from "react-select";
 import { Button } from "./ui/button";
 import { useRatings } from "../contexts/rating-contexts";
-import { useUser } from "@clerk/clerk-react";
+import { useUser, SignedIn } from "@clerk/clerk-react";
 import { useState } from "react";
 
 interface LegoSetCardData {
@@ -51,15 +51,17 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
                     <p>Set Number: {set.set_num}</p>
                     <p>Year: {set.year}</p>
                     <p>Number of Parts: {set.num_parts}</p>
-                    <div className="flex justify-center items-center mt-1">
-                        <Select
-                            options = {options}
-                            placeholder = "---"
-                            onChange={(option) => setRating(option?.value ?? 0)}
-                        />
-                        <Button className="ml-4 bg-red-600 hover:bg-red-700 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300"
-                        onClick={() => handleRating(rating)}>Rate</Button>
-                    </div>
+                    <SignedIn>
+                        <div className="flex justify-center items-center mt-1">
+                            <Select
+                                options = {options}
+                                placeholder = "---"
+                                onChange={(option) => setRating(option?.value ?? 0)}
+                            />
+                            <Button className="ml-4 bg-red-600 hover:bg-red-700 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300"
+                            onClick={() => handleRating(rating)}>Rate</Button>
+                        </div>
+                    </SignedIn>
                 </div>
             </div>
         </div>
