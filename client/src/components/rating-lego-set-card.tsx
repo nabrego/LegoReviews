@@ -21,6 +21,10 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
             userID: user.id,
             rating: rating,
             setNum: set.set_num,
+            name: set.name,
+            year: set.year,
+            num_parts: set.num_parts,
+            set_img_url: set.set_img_url,
         });
     }
 

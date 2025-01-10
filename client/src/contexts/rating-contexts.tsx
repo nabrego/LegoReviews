@@ -7,6 +7,10 @@ export interface Rating {
     userID: string;
     rating: number;
     setNum: string;
+    name: string;
+    year: number;
+    num_parts: number;
+    set_img_url: string;
 }
 
 interface RatingContextType {
