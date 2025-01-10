@@ -1,7 +1,7 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import RatingModel from "../schema/rating";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/getAllByUserID/:userID", async (req: Request, res: Response) => {
     try {
@@ -9,6 +9,7 @@ router.get("/getAllByUserID/:userID", async (req: Request, res: Response) => {
         const ratings = await RatingModel.find({userID: userID})
         if (ratings.length === 0) {
             res.status(404).send("No ratings found for this user");
+            return;
         }
         res.status(200).send(ratings);
     } catch (err) {
@@ -38,6 +39,7 @@ router.put("/:id", async (req: Request, res: Response) => {
         );
         if (!rating) {
             res.status(404).send();
+            return;
         }
         res.status(200).send(rating);
     } catch (err) {
@@ -51,6 +53,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
         const rating = await RatingModel.findByIdAndDelete(id);
         if (!rating) {
             res.status(404).send();
+            return;
         }
         res.status(200).send(rating);
     } catch (err) {
