@@ -1,18 +1,28 @@
 import { LegoSet } from "../types/lego-set";
 import Select from "react-select";
 import { Button } from "./ui/button";
+import { useRatings } from "../contexts/rating-contexts";
+import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 
 interface LegoSetCardData {
     set: LegoSet;
 }
 
-const handleRating = (rating: number) => {
-
-}
-
 export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
     const [rating, setRating] = useState<number>(0);
+    const { addRating } = useRatings();
+    const { user } = useUser();
+
+    const handleRating = (rating: number) => {
+        if (!user) return;
+
+        addRating({
+            userID: user.id,
+            rating: rating,
+            setNum: set.set_num,
+        });
+    }
 
     const options = [
         { value: 1, label: "1"},

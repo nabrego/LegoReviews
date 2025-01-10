@@ -21,7 +21,7 @@ mongoose
     .then(() => console.log("CONNECTED TO MONGODB"))
     .catch((err) => console.log("FAILED TO CONNECT TO MONGODB", err));
 
-app.use("/", ratingsRouter);
+app.use("/ratings", ratingsRouter);
 app.use("/api", setsRouter);
 
 app.listen(port, () => {

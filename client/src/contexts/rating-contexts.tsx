@@ -6,6 +6,7 @@ export interface Rating {
     _id?: string;
     userID: string;
     rating: number;
+    setNum: string;
 }
 
 interface RatingContextType {

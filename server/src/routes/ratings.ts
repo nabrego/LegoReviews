@@ -27,7 +27,7 @@ router.post("/", async (req: Request, res: Response) => {
     }
 });
 
-router.put("/", async (req: Request, res: Response) => {
+router.put("/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const newRatingBody = req.body;
@@ -45,7 +45,7 @@ router.put("/", async (req: Request, res: Response) => {
     }
 });
 
-router.delete("/", async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const rating = await RatingModel.findByIdAndDelete(id);
