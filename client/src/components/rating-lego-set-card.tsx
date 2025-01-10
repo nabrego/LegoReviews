@@ -11,16 +11,18 @@ interface LegoSetCardData {
 
 export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
     const [rating, setRating] = useState<number>(0);
-    const { addRating } = useRatings();
+    const { addRating, ratings } = useRatings();
     const { user } = useUser();
 
+    const ratingExists = ratings.some(r => r.set_num === set.set_num && r.userID === user?.id);
+
     const handleRating = (rating: number) => {
-        if (!user) return;
+        if (!user || rating === 0 || ratingExists) return;
 
         addRating({
             userID: user.id,
             rating: rating,
-            setNum: set.set_num,
+            set_num: set.set_num,
             name: set.name,
             year: set.year,
             num_parts: set.num_parts,
@@ -37,7 +39,7 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
     ]
 
     return (
-        <div className="h-[450px] w-[300px]bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div className="h-[450px] w-[300px] bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="w-[300px] h-[300px] flex items-center justify-center bg-white">
                 <img
                     src={set.set_img_url}
@@ -57,9 +59,15 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
                                 options = {options}
                                 placeholder = "---"
                                 onChange={(option) => setRating(option?.value ?? 0)}
+                                isDisabled={ratingExists}
                             />
-                            <Button className="ml-4 bg-red-600 hover:bg-red-700 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300"
-                            onClick={() => handleRating(rating)}>Rate</Button>
+                            <Button
+                                className={`ml-2 ${ratingExists ? "bg-zinc-400" : "bg-red-600 hover:bg-red-700 border-2 border-red-800"} rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300`}
+                                onClick={() => handleRating(rating)}
+                                disabled={ratingExists}
+                            >
+                                {ratingExists ? "Rated" : "Rate"}
+                            </Button>
                         </div>
                     </SignedIn>
                 </div>

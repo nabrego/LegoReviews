@@ -35,7 +35,10 @@ router.put("/:id", async (req: Request, res: Response) => {
         const rating = await RatingModel.findByIdAndUpdate(
             id,
             newRatingBody,
-            { new: true }
+            {
+                new: true,
+                runValidators: true
+             }
         );
         if (!rating) {
             res.status(404).send();

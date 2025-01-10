@@ -52,11 +52,11 @@ export const Home = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-4 text-center text-zinc-900">Welcome to the Lego Set Rating Home Page</h1>
+            <h1 className="text-3xl font-bold mb-4 text-center text-zinc-900">Welcome to the Lego Sets Rating Home Page!</h1>
             <SignedOut>
                 <h3 className="mb-8 text-center text-zinc-600">*Please Sign in to Rate Lego Sets*</h3>
             </SignedOut>
-            <div className="grid grid-cols-4 gap-6">
+            <div className="mt-8 grid grid-cols-4 gap-6">
                 {sets.map((set) => (
                     <div key={set.set_num}>
                         <RatingLegoSetCard set={set} />

@@ -6,7 +6,7 @@ export interface Rating {
     _id?: string;
     userID: string;
     rating: number;
-    setNum: string;
+    set_num: string;
     name: string;
     year: number;
     num_parts: number;
@@ -60,11 +60,17 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
                     'Content-Type': 'application/json',
                 }
             });
-            setRatings((prev) =>
-                prev.map((rating) => rating._id === id ? response.data : rating)
-            );
+            
+            if (response.data) {
+                setRatings((prev) => 
+                    prev.map((rating) => 
+                        rating._id === id ? response.data : rating
+                    )
+                );
+            }
         } catch (err) {
             console.error("Error updating rating", err);
+            throw err;
         }
     };
 
