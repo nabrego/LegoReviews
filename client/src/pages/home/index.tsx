@@ -10,8 +10,10 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '../../components/ui/pagination';
+import { useRatings } from '../../contexts/rating-contexts';
 
 export const Home = () => {
+    const { ratings } = useRatings();
     const [sets, setSets] = useState<LegoSet[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +31,7 @@ export const Home = () => {
             }
         };
         fetchSets();
-    }, [currentPage]);
+    }, [currentPage, ratings]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -56,7 +58,7 @@ export const Home = () => {
             <SignedOut>
                 <h3 className="mb-8 text-center text-zinc-600">*Please Sign in to Rate Lego Sets*</h3>
             </SignedOut>
-            <div className="mt-8 grid grid-cols-4 gap-6">
+            <div className="mt-8 grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                 {sets.map((set) => (
                     <div key={set.set_num}>
                         <RatingLegoSetCard set={set} />

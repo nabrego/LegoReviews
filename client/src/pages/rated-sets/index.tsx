@@ -10,7 +10,7 @@ export const RatedSets = () => {
             <SignedIn>
                 <div className="container mx-auto px-4 py-8">
                     <h1 className="text-3xl font-bold mb-4 text-center text-zinc-900">Your Rated Lego Sets</h1>
-                    <div className="mt-8 grid grid-cols-4 gap-4">
+                    <div className="mt-8 grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
                         {ratings.map((rating) => (
                             <RatedLegoSetCard key={rating._id} rating={rating} />
                         ))}

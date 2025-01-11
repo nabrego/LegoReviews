@@ -6,8 +6,8 @@ export const Navbar = () => {
         <header className="sticky top-0 w-full flex justify-between items-center bg-white shadow-md z-10">
             <nav className="h-16 px-4 flex justify-between items-center w-full">
                 <div className="flex gap-4">
-                    <Link to="/" className="text-black font-medium hover:text-blue-500">Home</Link>
-                    <Link to="/rated-sets" className="text-black font-medium hover:text-blue-500">Rated Sets</Link>
+                    <Link to="/" className="text-black font-medium hover:text-red-600">Home</Link>
+                    <Link to="/rated-sets" className="text-black font-medium hover:text-red-600">Rated Sets</Link>
                 </div>
                 <div className="flex gap-4">
                     <SignedIn>

@@ -6,12 +6,33 @@ const router = Router();
 router.get("/getAllByUserID/:userID", async (req: Request, res: Response) => {
     try {
         const userID = req.params.userID;
-        const ratings = await RatingModel.find({userID: userID})
+        const ratings = await RatingModel.find({ userID: userID })
+
         if (ratings.length === 0) {
             res.status(404).send("No ratings found for this user");
             return;
         }
+
         res.status(200).send(ratings);
+    } catch (err) {
+        res.status(500).send(err);
+    }
+});
+
+router.get("/stats/:set_num", async (req: Request, res: Response) => {
+    try {
+        const set_num = req.params.set_num;
+        const ratings = await RatingModel.find({ set_num: set_num });
+
+        const stats = {
+            avgRating: 0,
+            totalRatings: ratings.length,
+        };
+        if (ratings.length > 0) {
+            const sum = ratings.reduce((acc, curr) => acc + curr.rating, 0);
+            stats.avgRating = Number((sum / ratings.length).toFixed(1));
+        }
+        res.status(200).send(stats);
     } catch (err) {
         res.status(500).send(err);
     }

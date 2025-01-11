@@ -3,7 +3,8 @@ import Select from "react-select";
 import { Button } from "./ui/button";
 import { useRatings } from "../contexts/rating-contexts";
 import { useUser, SignedIn } from "@clerk/clerk-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface LegoSetCardData {
     set: LegoSet;
@@ -11,10 +12,24 @@ interface LegoSetCardData {
 
 export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
     const [rating, setRating] = useState<number>(0);
+    const [stats, setStats] = useState<{avgRating: number, totalRatings: number}>({avgRating: 0, totalRatings: 0});
     const { addRating, ratings } = useRatings();
     const { user } = useUser();
 
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3001/ratings/stats/${set.set_num}`);
+                setStats(response.data);
+            } catch (err) {
+                console.error("Error fetching stats", err);
+            }
+        }
+        fetchStats();
+    }, [set.set_num, ratings]);
+
     const ratingExists = ratings.some(r => r.set_num === set.set_num && r.userID === user?.id);
+    const existingRating = ratings.find(r => r.set_num === set.set_num && r.userID === user?.id);
 
     const handleRating = (rating: number) => {
         if (!user || rating === 0 || ratingExists) return;
@@ -24,8 +39,6 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
             rating: rating,
             set_num: set.set_num,
             name: set.name,
-            year: set.year,
-            num_parts: set.num_parts,
             set_img_url: set.set_img_url,
         });
     }
@@ -52,12 +65,12 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
                 <div className="text-sm text-zinc-600">
                     <p>Set Number: {set.set_num}</p>
                     <p>Year: {set.year}</p>
-                    <p>Number of Parts: {set.num_parts}</p>
+                    <p>Average Rating: {stats.avgRating}/5 from {stats.totalRatings} rating(s)</p>
                     <SignedIn>
                         <div className="flex justify-center items-center mt-1">
                             <Select
                                 options = {options}
-                                placeholder = "---"
+                                placeholder = {ratingExists ? `${existingRating?.rating}`: "---"}
                                 onChange={(option) => setRating(option?.value ?? 0)}
                                 isDisabled={ratingExists}
                             />
