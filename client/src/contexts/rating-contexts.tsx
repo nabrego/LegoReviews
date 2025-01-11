@@ -76,10 +76,11 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
 
     const deleteRating = async (id: string) => {
         try {
-            const response = await axios.delete(`${API_URL}}/ratings/${id}`);
+            const response = await axios.delete(`${API_URL}/ratings/${id}`);
             setRatings((prev) => prev.filter((rating) => rating._id !== response.data._id));
         } catch (err) {
             console.error("Error deleting rating", err);
+            throw err;
         }
     };
 
