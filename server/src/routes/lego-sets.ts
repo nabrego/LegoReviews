@@ -28,4 +28,25 @@ router.get("/sets", async (req: Request, res: Response) => {
     }
 });
 
+router.get("/sets/search/:term", async (req: Request, res: Response) => {
+    try {
+        const searchTerm = req.params.term;
+        const page = parseInt(req.query.page as string) || 1;
+        const response = await axios.get('http://rebrickable.com/api/v3/lego/sets/', {
+            params: {
+                search: searchTerm,
+                page,
+                page_size: 12,
+            },
+            headers: {
+                'Authorization': `key ${rebrickableAPIKey}`
+            }
+        });
+        res.json(response.data.results);
+    } catch (err) {
+        console.error('Error searching Lego sets!', err);
+        res.status(500).json({ message: 'Error searching Lego sets!' });
+    }
+});
+
 export default router;

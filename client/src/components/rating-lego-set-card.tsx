@@ -52,7 +52,7 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
     ]
 
     return (
-        <div className="h-[450px] w-[300px] bg-white overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+        <div className="h-[450px] w-[300px] bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
             <div className="w-[300px] h-[300px] flex items-center justify-center bg-white">
                 <img
                     src={set.set_img_url}

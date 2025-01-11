@@ -17,16 +17,21 @@ export const Home = () => {
     const { ratings } = useRatings();
     const [sets, setSets] = useState<LegoSet[]>([]);
     const [loading, setLoading] = useState(true);
-    const [filteredSets, setFilteredSets] = useState<LegoSet[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
     const cardsPerPage = 12;
 
     useEffect(() => {
         const fetchSets = async () => {
+            setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:3001/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
-                setSets(response.data);
-                setFilteredSets(response.data);
+                if (searchTerm) {
+                    const response = await axios.get(`http://localhost:3001/api/sets/search/${searchTerm}?page=${currentPage}`);
+                    setSets(response.data);
+                } else {
+                    const response = await axios.get(`http://localhost:3001/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
+                    setSets(response.data);
+                }
             } catch (err) {
                 console.error('Error fetching Lego sets', err);
             } finally {
@@ -34,34 +39,17 @@ export const Home = () => {
             }
         };
         fetchSets();
-    }, [currentPage, ratings]);
+    }, [currentPage, ratings, searchTerm]);
+
+    const handleSearch = async (term: string) => {
+        setSearchTerm(term);
+        setCurrentPage(1);
+    };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
         window.scrollTo(0, 0);
-    }
-
-    const handleSearch = async (search: string) => {
-        const filtered = sets.filter(set =>
-            set.name.toLowerCase().includes(search.toLowerCase()) ||
-            set.set_num.toLowerCase().includes(search.toLowerCase())
-        );
-        setFilteredSets(filtered);
     };
-
-    if (loading) {
-        return (
-            /* From Uiverse.io by Cybercom682 */
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-yellow-500 mx-auto"></div>
-                    <p className="text-zinc-600">
-                        Lego Sets are Loading...
-                    </p>
-                </div>
-            </div>
-        )
-    }
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -69,37 +57,37 @@ export const Home = () => {
                 <h3 className="mb-8 text-center text-zinc-600">*Please Sign in to Rate Lego Sets*</h3>
             </SignedOut>
             <div className="flex justify-center items-center">
-                <SearchBar onSearch={handleSearch}/>
+                <SearchBar onSearch={handleSearch} />
             </div>
-            <div className="mt-8 grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
-                {filteredSets.map((set) => (
-                    <div key={set.set_num} className="w-full flex justify-center">
-                        <RatingLegoSetCard set={set} />
-                    </div>
-                ))}
-            </div>
+            {loading ? (
+                <div className="flex justify-center items-center min-h-[200px]">
+                    <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-yellow-500"></div>
+                </div>
+            ) : (
+                <div className="mt-8 grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+                    {sets.map((set) => (
+                        <div key={set.set_num} className="w-full flex justify-center">
+                            <RatingLegoSetCard set={set} />
+                        </div>
+                    ))}
+                </div>
+            )}
 
-            <Pagination className="mt-8 -ml-3 flex justify-center items-center">
+            <Pagination className="mt-8 flex justify-center items-center">
                 <PaginationContent>
                     <PaginationItem>
-                        <PaginationPrevious href={`/?page=${currentPage - 1}`}
-                            onClick={(e) => {
-                                e.preventDefault();
+                        <PaginationPrevious
+                            onClick={() => {
                                 if (currentPage > 1) handlePageChange(currentPage - 1);
                             }}
                         />
                     </PaginationItem>
                     <PaginationItem>
-                        <span className="h-10 px-2 py-2 flex items-center justify-center">
-                            {currentPage}
-                        </span>
+                        <span className="h-10 px-4 py-2">{currentPage}</span>
                     </PaginationItem>
                     <PaginationItem>
-                        <PaginationNext href={`/?page=${currentPage + 1}`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handlePageChange(currentPage + 1);
-                            }}
+                        <PaginationNext
+                            onClick={() => handlePageChange(currentPage + 1)}
                         />
                     </PaginationItem>
                 </PaginationContent>
