@@ -15,6 +15,15 @@ app.use(cors());
 app.use("/ratings", ratingsRouter);
 app.use("/api", setsRouter);
 
+// Add test routes
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
+
+app.get('/test', (req, res) => {
+    res.json({ message: 'Test endpoint working' });
+});
+
 const mongoURI: string = process.env.MONGO_URI || "";
 
 mongoose
