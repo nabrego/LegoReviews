@@ -21,7 +21,10 @@ router.get("/sets", async (req: Request, res: Response) => {
                 'Authorization': `key ${rebrickableAPIKey}`
             }
         });
-        res.json(response.data.results);
+        res.json({
+            results: response.data.results,
+            count: response.data.count
+        });
     } catch (err) {
         console.error('Error fetching Lego sets!', err);
         res.status(500).json({ message: 'Error fetching Lego sets!'});
