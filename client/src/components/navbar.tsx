@@ -18,8 +18,16 @@ const handleHomeClick = (e: React.MouseEvent) => {
                     >
                         Home
                     </Link>
-                    <Link to="/rated-sets" className="text-black font-medium hover:text-red-600">Rated Sets</Link>
+                    <Link
+                        to="/rated-sets"
+                        className="text-black font-medium hover:text-red-600"
+                    >
+                        Rated Sets
+                    </Link>
                 </div>
+                <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-bold">
+                    Lego Set Ratings
+                </h1>
                 <div className="flex gap-4">
                     <SignedIn>
                         <UserButton />

@@ -16,6 +16,7 @@ import { SearchBar } from '../../components/search-bar';
 export const Home = () => {
     const { ratings } = useRatings();
     const [sets, setSets] = useState<LegoSet[]>([]);
+    const [totalSets, setTotalSets] = useState(0);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
@@ -27,10 +28,12 @@ export const Home = () => {
             try {
                 if (searchTerm) {
                     const response = await axios.get(`http://localhost:3001/api/sets/search/${searchTerm}?page=${currentPage}`);
-                    setSets(response.data);
+                    setSets(response.data.results);
+                    setTotalSets(response.data.count);
                 } else {
                     const response = await axios.get(`http://localhost:3001/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
                     setSets(response.data);
+                    setTotalSets(response.data.count);
                 }
             } catch (err) {
                 console.error('Error fetching Lego sets', err);
@@ -87,7 +90,9 @@ export const Home = () => {
                     </PaginationItem>
                     <PaginationItem>
                         <PaginationNext
-                            onClick={() => handlePageChange(currentPage + 1)}
+                            onClick={() => {
+                                if (currentPage < (Math.ceil(totalSets / cardsPerPage))) handlePageChange(currentPage + 1);
+                            }}
                         />
                     </PaginationItem>
                 </PaginationContent>
