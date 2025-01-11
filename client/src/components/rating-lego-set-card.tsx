@@ -6,6 +6,8 @@ import { useUser, SignedIn } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface LegoSetCardData {
     set: LegoSet;
 }
@@ -19,7 +21,7 @@ export const RatingLegoSetCard = ({ set }: LegoSetCardData) => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/ratings/stats/${set.set_num}`);
+                const response = await axios.get(`${API_URL}/ratings/stats/${set.set_num}`);
                 setStats(response.data);
             } catch (err) {
                 console.error("Error fetching stats", err);

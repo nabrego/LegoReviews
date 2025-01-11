@@ -2,6 +2,8 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export interface Rating {
     _id?: string;
     userID: string;
@@ -27,7 +29,7 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
     const fetchRatings = async() => {
         if (!user) return;
         try {
-            const response = await axios.get(`http://localhost:3001/ratings/getAllByUserID/${user?.id}`);
+            const response = await axios.get(`${API_URL}/ratings/getAllByUserID/${user?.id}`);
             setRatings(response.data);
         } catch (err) {
             console.error("Error fetching ratings", err);
@@ -40,7 +42,7 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
 
     const addRating = async (rating: Rating) => {
         try {
-            const response = await axios.post("http://localhost:3001/ratings", rating, {
+            const response = await axios.post(`${API_URL}/ratings`, rating, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -53,7 +55,7 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
 
     const updateRating = async (id: string, newRating: Rating) => {
         try {
-            const response = await axios.put(`http://localhost:3001/ratings/${id}`, newRating, {
+            const response = await axios.put(`${API_URL}/ratings/${id}`, newRating, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
@@ -74,7 +76,7 @@ export const RatingsProvider = ({children}: {children: React.ReactNode}) => {
 
     const deleteRating = async (id: string) => {
         try {
-            const response = await axios.delete(`http://localhost:3001/ratings/${id}`);
+            const response = await axios.delete(`${API_URL}}/ratings/${id}`);
             setRatings((prev) => prev.filter((rating) => rating._id !== response.data._id));
         } catch (err) {
             console.error("Error deleting rating", err);

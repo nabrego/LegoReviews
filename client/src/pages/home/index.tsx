@@ -13,6 +13,8 @@ import {
 import { useRatings } from '../../contexts/rating-contexts';
 import { SearchBar } from '../../components/search-bar';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const Home = () => {
     const { ratings } = useRatings();
     const [sets, setSets] = useState<LegoSet[]>([]);
@@ -27,11 +29,11 @@ export const Home = () => {
             setLoading(true);
             try {
                 if (searchTerm) {
-                    const response = await axios.get(`http://localhost:3001/api/sets/search/${searchTerm}?page=${currentPage}`);
+                    const response = await axios.get(`${API_URL}/api/sets/search/${searchTerm}?page=${currentPage}`);
                     setSets(response.data.results);
                     setTotalSets(response.data.count);
                 } else {
-                    const response = await axios.get(`http://localhost:3001/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
+                    const response = await axios.get(`${API_URL}/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
                     setSets(response.data);
                     setTotalSets(response.data.count);
                 }
