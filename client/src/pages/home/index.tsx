@@ -34,7 +34,7 @@ export const Home = () => {
                     setTotalSets(response.data.count);
                 } else {
                     const response = await axios.get(`${API_URL}/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
-                    setSets(response.data);
+                    setSets(response.data.results);
                     setTotalSets(response.data.count);
                 }
             } catch (err) {
