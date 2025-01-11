@@ -11,11 +11,13 @@ import {
     PaginationPrevious,
 } from '../../components/ui/pagination';
 import { useRatings } from '../../contexts/rating-contexts';
+import { SearchBar } from '../../components/search-bar';
 
 export const Home = () => {
     const { ratings } = useRatings();
     const [sets, setSets] = useState<LegoSet[]>([]);
     const [loading, setLoading] = useState(true);
+    const [filteredSets, setFilteredSets] = useState<LegoSet[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const cardsPerPage = 12;
 
@@ -24,6 +26,7 @@ export const Home = () => {
             try {
                 const response = await axios.get(`http://localhost:3001/api/sets?page=${currentPage}&limit=${cardsPerPage}`);
                 setSets(response.data);
+                setFilteredSets(response.data);
             } catch (err) {
                 console.error('Error fetching Lego sets', err);
             } finally {
@@ -37,6 +40,14 @@ export const Home = () => {
         setCurrentPage(page);
         window.scrollTo(0, 0);
     }
+
+    const handleSearch = async (search: string) => {
+        const filtered = sets.filter(set =>
+            set.name.toLowerCase().includes(search.toLowerCase()) ||
+            set.set_num.toLowerCase().includes(search.toLowerCase())
+        );
+        setFilteredSets(filtered);
+    };
 
     if (loading) {
         return (
@@ -54,13 +65,15 @@ export const Home = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-4 text-center text-zinc-900">Welcome to the Lego Sets Rating Home Page!</h1>
             <SignedOut>
                 <h3 className="mb-8 text-center text-zinc-600">*Please Sign in to Rate Lego Sets*</h3>
             </SignedOut>
-            <div className="mt-8 grid lg:grid-cols-4 gap-6 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
-                {sets.map((set) => (
-                    <div key={set.set_num}>
+            <div className="flex justify-center items-center">
+                <SearchBar onSearch={handleSearch}/>
+            </div>
+            <div className="mt-8 grid grid-cols-1 gap-6 justify-items-center sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+                {filteredSets.map((set) => (
+                    <div key={set.set_num} className="w-full flex justify-center">
                         <RatingLegoSetCard set={set} />
                     </div>
                 ))}
