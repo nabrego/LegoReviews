@@ -7,11 +7,19 @@ import cors from "cors";
 
 dotenv.config();
 
+const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+
 const app = express();
 const port = process.env.PORT || 3001;
+const corsOptions = {
+    origin: clientOrigin,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+}
 
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use("/ratings", ratingsRouter);
 app.use("/api", setsRouter);
 
